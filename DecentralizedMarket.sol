@@ -304,7 +304,6 @@ contract DecentralizedMarketplace is ReentrancyGuard {
     ) external onlyExistItem(_category, _itemId) onlyBuyer(_category, _itemId) nonReentrant
     {
         Order storage order = orders[msg.sender][_category][_itemId];
-        bool flag = false;
         if (order.status == OrderStatus.Confirmed) {
             if (block.timestamp <= order.confirmationTime) {
                 if (_status == OrderStatus.Delivered) {
@@ -319,14 +318,9 @@ contract DecentralizedMarketplace is ReentrancyGuard {
                 
             } else {
                 calculateAmountToConfirm(_category, _itemId, OrderStatus.Delivered);  
-                flag = true; 
             }
         } else {
             revert DecentralizedMarketplace__YouCannotHaveAnyOrderYet();
-        }
-
-        if(flag){
-            revert("Time Is Over");
         }
        
     }
